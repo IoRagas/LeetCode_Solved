@@ -1,0 +1,54 @@
+class Solution {
+public:
+    set<string> sup;
+    set<string> rec;
+    vector<vector<string>> ing;
+    unordered_map<string, int> table;
+    set<string> visited;
+    bool Chef(string required)
+    {
+        //Check if it can be made
+        if(sup.size() == 0 ) return false;
+        if(sup.find(required) != sup.end())
+        {
+            //Ingredient Found
+            return true;
+        }
+        //Check if its A recipe
+        if(rec.find(required) != rec.end())
+        {
+            if(visited.find(required) != visited.end()) return false;
+            else visited.insert(required);
+            bool check = true;
+            for(auto &v : ing[table[required]])
+            {
+                check = check && Chef(v);
+            }
+            if(check == true) sup.insert(required);
+            return check;
+        }
+        return false;
+    }
+    
+    vector<string> findAllRecipes(vector<string>& recipes, vector<vector<string>>& ingredients, vector<string>& supplies) {
+        for(int i = 0; i < recipes.size(); i++) table[recipes[i]] = i;
+        ing = ingredients;
+     //   set<string> s;
+        vector<string> ans;
+        for(auto &v : supplies) sup.insert(v);
+        for(auto &v : recipes) rec.insert(v);
+
+        for(int i = 0; i < recipes.size(); i++){
+            string tomake = recipes[i];
+            //Assuming all Ingredients are Already Present
+            bool make = Chef(tomake);
+            if(make == true) ans.push_back(recipes[i]);
+            visited.clear();
+        }
+        return ans;
+    }
+
+
+    
+
+};
