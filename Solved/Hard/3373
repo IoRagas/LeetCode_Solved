@@ -1,0 +1,110 @@
+//LeetCode Question 3373 : Maximize the Number of Target Nodes After Connecting Trees 2
+//--Graph Coloring Concept
+
+class Solution {
+public:
+    vector<int> maxTargetNodes(vector<vector<int>>& edges1, vector<vector<int>>& edges2) {
+
+        vector<int> first(edges1.size() + 1); //Even Targets for Each Node
+        unordered_map<int, unordered_set<int>> table1; //Store Graph
+        unordered_map<int, unordered_set<int>> table2;
+
+        for(auto &v : edges1)
+        {
+            table1[v[0]].insert(v[1]);
+            table1[v[1]].insert(v[0]);
+        }
+        for(auto & v : edges2){
+            table2[v[0]].insert(v[1]);
+            table2[v[1]].insert(v[0]);
+        }
+
+        set<int> o1, e1;
+
+        queue<pair<int, int>> s;
+        int evens = 0;
+        //All Non Adjacent Nodes Will have the Same Target(Reach)
+        // Target(Nodes even Distance Away), same applies for the odd ones too
+        {
+            vector<bool> visited(first.size(), false); 
+            int i = 0;
+            s.push(make_pair(i, 0));
+        while(s.empty() == false)
+        {
+            pair<int, int> curr = s.front();
+            s.pop();
+            visited[curr.first] = true;
+            if(curr.second % 2 == 0)
+            {
+                e1.insert(curr.first);
+                evens++;
+            }else o1.insert(curr.first);
+            int n = curr.second + 1;
+            for(auto &v : table1[curr.first])
+            {
+                if(visited[v] == true) continue;
+                s.push(make_pair(v , n));
+            }
+        }
+            first[i] = evens;
+        }
+        for(auto & v : e1) first[v] = evens;
+        evens = 0;
+        {
+            vector<bool> visited(first.size(), false); 
+            int i = *o1.begin();
+            s.push(make_pair(i, 0));
+        while(s.empty() == false)
+        {
+            pair<int, int> curr = s.front();
+            s.pop();
+            visited[curr.first] = true;
+            if(curr.second % 2 == 0)
+            {
+                evens++;
+            }
+            int n = curr.second + 1;
+            for(auto &v : table1[curr.first])
+            {
+                if(visited[v] == true) continue;
+                s.push(make_pair(v , n));
+            }
+        }
+            first[i] = evens;
+        }
+        for(auto &v : o1) first[v] = evens;
+
+        //Second Tree
+        int m = 0; 
+        for(int z = 0; z < 2; z++)
+        {
+            int i = 0;
+            if(z == 0)  i = 0;
+            else i = *(table2[0].begin());
+            int odds = 0;
+            vector<bool> visited(edges2.size() + 1, false); 
+            s.push(make_pair(i, 0));
+        while(s.empty() == false)
+        {
+            pair<int, int> curr = s.front();
+            s.pop();
+            visited[curr.first] = true;
+            if(curr.second % 2 == 1) odds++;
+            int n = curr.second + 1;
+            for(auto &v : table2[curr.first])
+            {
+                if(visited[v] == true) continue;
+                s.push(make_pair(v , n));
+            }
+        }
+            m = max ( m , odds );
+        }
+
+        for(int i = 0; i < first.size(); i++)
+        {
+            first[i] += m;
+        }
+
+        return first;
+    }
+};
