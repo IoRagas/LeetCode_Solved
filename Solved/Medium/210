@@ -1,0 +1,84 @@
+class Solution {
+public:
+    vector<bool> V; //Visisted Vector
+    vector<vector<bool>> table;
+    stack<int> ans;
+    int n = 0;
+
+    bool ans1 = true;
+    vector<bool> V1; //Visisted Vector
+    void DFS1(int t, vector<bool> vect)
+    {
+        //Check if t is already visited
+        //Cycle detected
+        if(vect[t] == true){
+            ans1 = false;
+            return;
+        }
+        if(V1[t] == true) return;
+        V1[t] = true;
+        vect[t] = true;
+        //Else do a DFS for all adjacent
+        for(int i = 0; i < n; i++)
+        {
+            if(table[t][i] == true  )
+            {
+                DFS1(i, vect);
+            }
+        }
+        return;
+    }
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        V1.resize(numCourses, false);
+   
+        for(int i = 0 ; i < numCourses; i++)
+        {
+            if(V1[i] == false)
+            {
+                vector<bool> temp(numCourses, false); 
+                DFS1( i, temp);
+            } 
+        }
+        return ans1;
+    }
+
+
+    void DFS(int t)
+    {
+        V[t] = true;
+        //Else do a DFS for all adjacent
+        for(int i = 0; i < n; i++)
+        {
+            if(table[t][i] == true && V[i] == false)
+            {
+                DFS(i);
+            }
+        }
+        ans.push(t);
+    }
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<int> a;
+
+        table = vector<vector<bool>>(numCourses, vector<bool>(numCourses));
+        V.resize(numCourses, false);
+        n = numCourses;
+        for(auto &v : prerequisites)
+            table[v[1]][v[0]] = true;
+
+        if(canFinish(numCourses, prerequisites) == false) return a;
+        for(int i = 0 ; i < numCourses; i++)
+        {
+            if(V[i] == false)
+            {
+                DFS( i);
+            } 
+        }
+
+        while(!ans.empty()){
+            a.push_back(ans.top());
+            ans.pop();
+        }
+        return a;
+    }
+
+};
