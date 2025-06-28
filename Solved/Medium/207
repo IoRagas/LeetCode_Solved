@@ -1,0 +1,46 @@
+class Solution {
+public:
+    bool ans = true;
+    vector<bool> V; //Visisted Vector
+    vector<vector<bool>> table;
+    int n = 0;
+    void DFS(int t, vector<bool> vect)
+    {
+        //Check if t is already visited
+        //Cycle detected
+        if(vect[t] == true){
+            ans = false;
+            return;
+        }
+        if(V[t] == true) return;
+        V[t] = true;
+        vect[t] = true;
+        //Else do a DFS for all adjacent
+        for(int i = 0; i < n; i++)
+        {
+            if(table[t][i] == true  )
+            {
+                DFS(i, vect);
+            }
+        }
+ //       cout<<t<<endl;
+        return;
+    }
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        table = vector<vector<bool>>(numCourses, vector<bool>(numCourses));
+        V.resize(numCourses, false);
+        n = numCourses;
+        for(auto &v : prerequisites)
+            table[v[1]][v[0]] = true;
+
+        for(int i = 0 ; i < numCourses; i++)
+        {
+            if(V[i] == false)
+            {
+                vector<bool> temp(numCourses, false); 
+                DFS( i, temp);
+            } 
+        }
+        return ans;
+    }
+};
