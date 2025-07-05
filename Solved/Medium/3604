@@ -1,0 +1,42 @@
+class Solution {
+public:
+    int minTime(int n, vector<vector<int>>& edges) {
+        if (n == 1) return 0;
+
+        vector<int> dp(n, INT_MAX);
+        
+        unordered_map<int, unordered_map<int, vector<pair<int, int>>>> timetakes;
+
+        for (auto &v : edges) {
+            timetakes[v[0]][v[1]].push_back({v[2], v[3]});
+        }
+
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> tt;
+        tt.push({0, 0});
+
+        while (!tt.empty()) {
+            auto curr = tt.top();
+            tt.pop();
+
+            if (curr.first >= dp[curr.second]) continue;
+
+            dp[curr.second] = curr.first;
+
+            if (curr.second == n - 1) break;
+
+            for (auto &[v, intervals] : timetakes[curr.second]) {
+                for (auto &z : intervals) {
+                    if (curr.first > z.second) continue;
+
+                    if (curr.first >= z.first) {
+                        tt.push({curr.first + 1, v});
+                    } else {
+                        tt.push({z.first + 1, v});
+                    }
+                }
+            }
+        }
+
+        return dp[n - 1] == INT_MAX ? -1 : dp[n - 1];
+    }
+};
