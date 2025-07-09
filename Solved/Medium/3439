@@ -1,0 +1,36 @@
+class Solution {
+public:
+    int maxFreeTime(int eventTime, int k, vector<int>& startTime, vector<int>& endTime) {
+        int ans = 0;
+
+        vector<int> diff(startTime.size() + 1);
+
+        diff[0] = startTime[0];
+        for(int i = 0; i < startTime.size() ; i++)
+        {
+            //Start Time of Next Meeting - Ending of Previous one
+            int g = (i+1 < startTime.size() ? startTime[i + 1] : eventTime) - endTime[i];
+            diff[i + 1] = g;
+        }
+    //    for(auto &v : diff)
+    //        cout<<v<<" ";
+
+        int sum = 0;
+        int l = 0, r = 0;
+        //k += 1;
+        int n = diff.size();
+        while(r < n)
+        {
+            if( r - l > k)
+            {
+                sum -= diff[l];
+                l++;
+            }
+            sum += diff[r];
+            ans = max(sum, ans);
+            r += 1;
+        }
+
+        return ans;
+    }
+};
