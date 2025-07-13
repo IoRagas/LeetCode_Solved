@@ -1,0 +1,29 @@
+class Solution {
+public:
+    vector<int> successfulPairs(vector<int>& spells, vector<int>& potions, long long success) {
+         vector<pair<int, int>> table;
+         for(int i = 0; i < spells.size(); i++)
+            table.push_back({spells[i], i});
+        sort(table.rbegin(), table.rend());
+        sort(potions.begin(), potions.end());
+        vector<int> ans(spells.size(), 0);
+        long long prod = 0;
+        int n = table.size() - 1, m = potions.size() - 1;
+        while(n >= 0 )
+        {
+            //cout<<table[n].first;
+            int val = table[n].first;
+            if(m != -1)
+            prod = (long long)val * potions[m];
+            if(prod >= success || m == -1)
+            {
+                //Take Potions as low as possible
+                while(m >= 0 && (long long)potions[m] * val >= success)
+                    m--;
+            }
+            ans[table[n].second] =  potions.size() - 1 - m;
+            n--;
+        }
+        return ans;
+    }
+};
