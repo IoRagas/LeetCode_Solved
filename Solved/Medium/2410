@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int matchPlayersAndTrainers(vector<int>& players, vector<int>& trainers) {
+        int ans = 0;
+        priority_queue<int> tr;
+        priority_queue<int> pl;
+        for(auto &v : players)
+            pl.push(v);
+        for(auto &v : trainers)
+            tr.push(v);
+        while(!tr.empty() && !pl.empty())
+        {
+            if(pl.top() <= tr.top())
+            {
+                pl.pop();
+                tr.pop();
+                ans++;
+            }else
+                pl.pop();
+        }
+
+        return ans;
+    }
+};
