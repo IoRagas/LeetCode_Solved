@@ -1,0 +1,23 @@
+class Solution {
+public:
+    string processStr(string s) {
+        string ans;
+        for(auto &v : s)
+        {
+            if(v == '*')
+            {
+                if(ans.size() > 0) ans.pop_back();
+            }else if(v == '#'){
+                ans += ans;
+            }else  if(v == '%')
+            {
+                reverse(ans.begin(), ans.end());
+            }else
+            {
+                ans += v;
+            }
+        }
+
+        return ans;
+    }
+};
