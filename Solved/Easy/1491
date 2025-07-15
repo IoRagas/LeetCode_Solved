@@ -1,0 +1,18 @@
+class Solution {
+public:
+    double average(vector<int>& salary) {
+        double ans = 0;
+        int mmax = salary[0];
+        int mmin = salary[1];
+        int sum = 0;
+        for(auto &v : salary)
+        {
+            if(v > mmax) mmax = v;
+            else if(v < mmin) mmin = v;
+            sum += v;
+        }
+        
+
+        return (sum - mmax - mmin ) / ((salary.size() - 2) * 1.0);
+    }
+};
