@@ -1,0 +1,21 @@
+//If you're reading this, then WOW
+class Solution {
+public:
+    int minOperations(vector<int>& nums, int k) {
+        set<int> table;
+        for(int i = 1; i <= k ; i++)
+            table.insert(i);
+        int op = 0;
+        for(int i = nums.size() -1 ; i >= 0; i--)
+        {
+            if(table.size() == 0) return op;
+            
+            if(table.find(nums[i]) != table.end())
+            {
+                table.erase(nums[i]);
+            }
+            op++;
+        }
+        return op;
+    }
+};
