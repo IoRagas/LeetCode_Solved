@@ -1,0 +1,59 @@
+class Bitset {
+public:
+    vector<bool> table;
+    int counts = 0;
+    bool flipped = false;
+    Bitset(int size) {
+        table = vector<bool>(size);
+    }
+    
+    void fix(int idx) {
+        if((flipped ? !table[idx] : table[idx]) == 0) counts++;
+        table[idx] = flipped ? 0 : 1;
+        }
+    
+    void unfix(int idx) {
+        if((flipped ? !table[idx] : table[idx]) == 1) counts--;
+        table[idx] = flipped ? 1 : 0;
+    }
+    
+    void flip() {
+        flipped = !flipped;
+        counts = table.size()  - counts;
+    }
+    
+    bool all() {
+        return counts == table.size();
+    }
+    
+    bool one() {
+            return counts > 0;
+    }
+    
+    int count() {
+        return counts; 
+    }
+    
+    string toString() {
+        string ans = "";
+        if(flipped == false)
+        for(auto v : table)
+            ans += ('0' + v);
+        if(flipped)
+            for(auto v : table)
+            ans += ('0' + !v);
+        return ans;
+    }
+};
+
+/**
+ * Your Bitset object will be instantiated and called as such:
+ * Bitset* obj = new Bitset(size);
+ * obj->fix(idx);
+ * obj->unfix(idx);
+ * obj->flip();
+ * bool param_4 = obj->all();
+ * bool param_5 = obj->one();
+ * int param_6 = obj->count();
+ * string param_7 = obj->toString();
+ */
