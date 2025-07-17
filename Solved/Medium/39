@@ -1,0 +1,24 @@
+class Solution {
+public:
+    vector<vector<int>> ans;
+    vector<int> c; 
+    void fun(vector<int> num, int amount, int index)
+    {
+        if(amount == 0){    ans.push_back(num); return;     }
+        if(index >= c.size()) return;
+
+        //Dont Include The Current Number
+        if(index + 1 < c.size() )
+            fun(num, amount, index + 1);
+        
+        if(c[index] > amount) return;//Number Too big To Include
+        //Include the Current Number
+        num.push_back(c[index]);
+        fun(num, amount - c[index], index);
+    }
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        c = candidates;
+        fun(vector<int>(), target, 0);
+        return ans;
+    }
+};
