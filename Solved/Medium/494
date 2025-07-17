@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int ans = 0;
+    vector<int> n;
+    int goal ;
+    void fun(int sum, int index)
+    {
+        if(sum == goal && n.size() == index)
+        {
+            ans++;
+            return;
+        } 
+        if( n.size() == index) return;
+
+        fun(sum + n[index], index + 1);
+        fun(sum - n[index], index + 1);
+
+    }
+    int findTargetSumWays(vector<int>& nums, int target) {
+        n = nums;
+        goal = target; 
+        fun(0, 0);
+        return ans;
+    }
+};
