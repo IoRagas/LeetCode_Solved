@@ -1,0 +1,28 @@
+//Changed Some Function initial Variable Names
+
+class Solution {
+public:
+     set<int> visited;
+    vector<int> table; //Will Store The Number of Ways to Sum up To This Value
+    vector<int> c;
+    int fun(int n)
+    {
+        if(n == 0) return 1;
+        if(visited.find(n) != visited.end()) //Computed This Value Before
+            return table[n];
+        visited.insert(n);
+        int ways = 0;
+        for(auto &v : c)
+            if(v > n ) break;
+            else ways += fun(n - v);
+        table[n] = ways;
+        return table[n];
+    }
+    int combinationSum4(vector<int>& coins, int amount) {
+        table = vector<int>(amount + 1);
+        c = coins;
+        sort(c.begin(), c.end());
+        fun(amount);
+        return table[amount];
+    }
+};
