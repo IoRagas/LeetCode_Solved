@@ -1,0 +1,36 @@
+class Solution {
+public:
+    vector<vector<int>> table;  // DP table: table[n][idx] stores number of ways to make amount n using coins from idx onward
+    vector<int> c;              // Stores coin denominations
+
+    // Recursive function to calculate number of ways to make amount 'n' starting from coin at index 'idx'
+    int fun(int n, int idx) {
+        if (n == 0) 
+            return 1; // Base case: exact amount achieved, count as one valid combination
+        
+        if (n < 0 || idx == c.size()) 
+            return 0; // Base case: amount becomes negative OR no more coins left to use
+        
+        if (table[n][idx] != -1) 
+            return table[n][idx]; // Return previously computed result (Memoization)
+
+        // Two choices:
+        // 1. Include current coin: reduce amount by c[idx], stay at the same index (can reuse the coin)
+        // 2. Exclude current coin: move to the next index, do not use current coin anymore
+        int ways = fun(n - c[idx], idx) + fun(n, idx + 1);
+
+        table[n][idx] = ways;  // Store result in DP table before returning
+        return table[n][idx];
+    }
+
+    int change(int amount, vector<int>& coins) {
+        c = coins;  // Assign coins array to member variable for use in fun()
+
+        // Initialize DP table with -1 (uncomputed states)
+        // Rows represent amounts from 0 to amount
+        // Columns represent coin indices from 0 to coins.size() - 1
+        table = vector<vector<int>>(amount + 1, vector<int>(coins.size(), -1));
+
+        return fun(amount, 0);  // Start recursion with full amount and first coin
+    }
+};
