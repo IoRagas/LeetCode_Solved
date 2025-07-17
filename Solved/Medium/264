@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int nthUglyNumber(int n) {
+        vector<int> ans;
+        ans.push_back(1);
+        while(ans.size() < n)
+        {
+            int v = ans[ans.size() - 1];
+            long long tt = INT_MAX;
+            for(long long z : ans)
+            {
+                if(z * 2 >  v)
+                {
+                    tt = min(z * 2, tt);
+                }else if(z * 3 > v)
+                {
+                    tt = min(z * 3, tt);
+                }else if(z * 5 > v)
+                {
+                    tt = min(z * 5, tt);
+                }
+            }
+            ans.push_back(tt);
+        }
+      //  for(auto &v : ans) cout<<v<<" ";
+        return ans[ans.size() -1 ];
+    }
+};
