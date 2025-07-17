@@ -1,0 +1,27 @@
+class Solution {
+public:
+    vector<vector<int>> ans;
+    int kk, nn;
+    void fun(vector<int> &num, int index, int sum)
+    {
+        if(num.size() == kk && sum == nn){    ans.push_back(num); return;     }
+        if(sum >= nn || num.size() > kk) return;  
+        if(index > 9) return;
+
+        //Dont Include The Current Number
+        if(index + 1 <= nn )
+            fun(num, index + 1, sum);
+        
+        //Include the Current Number
+        num.push_back(index);
+        fun(num, index + 1, sum + index);
+        num.pop_back();
+    }
+    vector<vector<int>> combinationSum3(int k, int n) {
+        kk = k;
+        nn = n;
+        vector<int> temp;
+        fun(temp, 1, 0);
+        return ans;
+    }
+};
