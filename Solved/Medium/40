@@ -1,0 +1,30 @@
+class Solution {
+public:
+    vector<vector<int>> ans;
+    vector<int> c; 
+    set<string> table;
+    void fun(vector<int> num, int amount, int index)
+    {
+        if(amount == 0){    ans.push_back(num); return;     }
+        if(index >= c.size()) return;
+
+        //Dont Include The Current Number
+        if(index + 1 < c.size() )
+        {
+            int z = index + 1;
+            while(z < c.size() && c[z] == c[z - 1]) z++;
+                fun(num, amount, z);
+        }
+        
+        if(c[index] > amount) return;//Number Too big To Include
+        //Include the Current Number
+        num.push_back(c[index]);
+        fun(num, amount - c[index], index + 1);
+    }
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+         c = candidates;
+         sort(c.begin(), c.end());
+        fun(vector<int>(), target, 0);
+        return ans;
+    }
+};
