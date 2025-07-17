@@ -1,0 +1,43 @@
+class Solution {
+public:
+    vector<string> ans;
+    string num; int target;
+    void fun(string expression, int index, long long prev, long long sum) {
+    if (index == num.size()) {
+        if (sum == target) ans.push_back(expression);
+        return;
+    }
+
+    for (int length = 1; index + length <= num.size(); length++) {
+        string sdigit = num.substr(index, length);
+        
+        if (sdigit.size() > 1 && sdigit[0] == '0') break;  // Skip leading zeros
+
+        long long digit = stoll(sdigit);
+
+        if (index == 0) {
+            // First number, no operator in front
+            fun(sdigit, index + length, digit, digit);
+        } else {
+            // Addition
+            fun(expression + '+' + sdigit, index + length, digit, sum + digit);
+
+            // Subtraction
+            fun(expression + '-' + sdigit, index + length, -digit, sum - digit);
+
+            // Multiplication: sum - prev + prev * digit logic
+            fun(expression + '*' + sdigit, index + length, prev * digit, sum - prev + prev * digit);
+        }
+    }
+
+    }
+
+
+    vector<string> addOperators(string numb, int targeted) {
+        num = numb;
+        target = targeted;
+        string temp = "";
+        fun(temp, 0, -1, 0);
+        return ans;
+    }
+};
