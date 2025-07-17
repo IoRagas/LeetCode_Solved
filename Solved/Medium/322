@@ -1,0 +1,37 @@
+class Solution {
+public:
+    int ans = INT_MAX;
+    vector<int> c ;
+
+    int coinChange(vector<int>& coins, int amount) {
+        if(amount == 0) return 0;
+        c = coins;
+        sort(c.begin(), c.end());
+        unordered_map<int, int> visited; //Amount, Coins
+         priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+        pq.push({0, amount});
+        visited[amount] = 0;
+        while(!pq.empty())
+        {
+            auto v = pq.top();
+            pq.pop();
+            if(v.second == 0){
+                ans = min(ans, v.first);
+                continue;
+            }
+            if(v.first > ans) continue;
+            for(int i = 0; i < c.size() && c[i] <= v.second; i++)
+            {
+                int left = v.second - c[i];
+                int st = v.first + 1;
+                if(visited.count(left) == 0 || st < visited[left])
+                {
+                    visited[left] = st;
+                    pq.push({ st,  left});
+                }
+            }
+
+        }
+        return ans == INT_MAX ? -1 : ans;
+    }
+};
