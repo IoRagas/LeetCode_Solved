@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int numSquares(int n) {
+        vector<int> table(n + 1, 100000); //Where N stores the Number of Digits Required to Sum upto K
+        vector<int> nums;
+        for(int i = 1; i <= n ; i++)
+        {
+            int val = i * i;
+            if(val > n) break;
+            if(val == n) return 1;
+            nums.push_back(val);
+            table[val] = 1;
+        }
+        //table[0] = 1;
+        for(auto &val : nums)
+        {
+            //Going Bottom To Top SO Digits can be Reused
+            for(int j = val; j <= n; j++)
+            {
+                table[j] = min(table[j], table[j - val] + 1);
+            }
+        }
+
+        return table[n];
+    }
+};
