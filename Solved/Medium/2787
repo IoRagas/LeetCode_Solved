@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int numberOfWays(int n, int x) {
+        vector<long long> table(n + 1); //Where i  is the Number of ways to sum up to i
+        table[0] = 1;
+
+        vector<int> nums;
+        for(int i = 1; i <= n; i++)
+        {
+            long long val = pow(i, x);
+            if(val > n) break;
+            nums.push_back(val);
+        }
+
+        for(int i = 0 ; i < nums.size(); i++)
+        {
+            for(int j = n; j >= nums[i]; j--)
+            {
+                table[j] += table[j - nums[i]]; 
+                table[j] = table[j] % (long long)(1e9 + 7);
+            }
+        }
+
+        return table[n];
+    }
+};
