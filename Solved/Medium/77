@@ -1,0 +1,26 @@
+class Solution {
+public:
+    vector<vector<int>> ans;
+    int kk, nn;
+    void fun(vector<int> &num, int index)
+    {
+        if(num.size() == kk){    ans.push_back(num); return;     }
+        if(index > nn) return;
+
+        //Dont Include The Current Number
+        if(index + 1 <= nn )
+            fun(num, index + 1);
+        
+        //Include the Current Number
+        num.push_back(index);
+        fun(num, index + 1);
+        num.pop_back();
+    }
+    vector<vector<int>> combine(int n, int k) {
+        kk = k;
+        nn = n;
+        vector<int> temp;
+        fun(temp, 1);
+        return ans;
+    }
+};
