@@ -1,0 +1,49 @@
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& t) {
+        vector<int> ans(t.size()); 
+        ans[ans.size() - 1] = 0; // Last day has no future days, so 0
+
+        // Stack stores pairs: {temperature, index}
+        stack<pair<int, int>> table; 
+        table.push({t[t.size() - 1], t.size() - 1});
+
+        // Traverse from second-last element to the first
+        for(int i = ans.size() - 2; i >= 0; i--)
+        {
+            // If current temperature is greater than or equal to the top of stack
+            if(t[i] >= table.top().first)
+            {
+                ans[i] = 0; // Initialize as no warmer day found yet
+
+                // Pop all smaller or equal temperatures since they can't help current day
+                while(!table.empty() && t[i] >= table.top().first)
+                    table.pop();
+
+                // If stack isn't empty, the top element is the next warmer day
+                if(table.size() > 0)
+                    ans[i] = table.top().second - i;
+
+                // Push the current temperature and its index onto the stack
+                table.push({t[i], i});
+                continue;
+            }
+            else
+            {
+                ans[i] = 0; // Initialize as no warmer day found yet
+
+                // Pop all temperatures that are less than or equal to the current one
+                while(!table.empty() && table.top().first <= t[i])
+                    table.pop();
+
+                // If stack isn't empty, assign the number of days until a warmer temperature
+                if(table.size() > 0)
+                    ans[i] = table.top().second - i;
+
+                // Push the current temperature and its index onto the stack
+                table.push({t[i], i});
+            }
+        }
+        return ans;
+    }
+};
