@@ -1,0 +1,46 @@
+class Solution {
+public:
+    long long minimumDifference(vector<int>& nums) {
+        long long ans = 4999999500000; int n = nums.size(); n = n / 3;
+        vector<long long> left(n + 1), right(n + 1);
+        priority_queue<int> pq;
+        long long sum = 0;
+        for(int i = 0 ; i < n * 2; i++)
+        {
+            if( i < n){ sum += nums[i]; pq.push(nums[i]); continue;}
+            if(i == n) left[0] = sum;
+            if(nums[i] < pq.top()){
+                //Got a Smaller Number
+                sum -= pq.top(); //Remove the Prev Larger Number
+                sum += nums[i]; //Add the Current Smaller Number
+                pq.pop();
+                pq.push(nums[i]);
+            }
+            left[i - n + 1] = sum;
+        }
+        //Now for the Right Part
+        sum = 0;
+        priority_queue<int, vector<int>, greater<int>> p;
+        for(int i = n * 3 - 1; i >= n ; i--)
+        {
+
+            if(i >= n * 2) { sum += nums[i];  p.push(nums[i]); if(i == n * 2) right[n] = sum;  continue;}
+            if(nums[i] > p.top())
+            {
+                sum -= p.top(); p.pop();
+                sum += nums[i];
+                p.push(nums[i]);
+            }
+            right[i - n ] = sum;
+        }
+        //for(auto &v : right) cout<<v<<" ";
+
+
+        for(int i = 0 ; i <= n; i++)
+        {
+           // cout<<left[i] <<" "<<right[i]<<endl;
+            ans = min(ans, left[i] - right[i]);
+        }
+        return ans;
+    }
+};
