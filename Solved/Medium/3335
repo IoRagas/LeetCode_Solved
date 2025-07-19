@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int lengthAfterTransformations(string s, int t) {
+        const int MOD = 1e9 + 7;
+        long long ans = s.length();
+        vector<long long> freq(26, 0);
+
+        for (auto &v : s)
+            freq[v - 'a']++;
+/*
+*/
+        while (t--) {
+            ans = (ans + freq[25]) % MOD;
+            long long z = freq[25];
+            for (int i = 25; i > 0; --i)
+                freq[i] = freq[i - 1];
+            freq[0] = z;
+            freq[1] = (freq[1] + z) % MOD; 
+        }
+
+        return ans;
+    }
+};
