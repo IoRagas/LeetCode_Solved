@@ -1,0 +1,51 @@
+class Solution {
+public:
+    vector<int> numMovesStones(int a, int b, int c) {
+        // Step 1: Store the input positions into a vector and sort them
+        vector<int> temp(3);
+        temp[0] = a;
+        temp[1] = b;
+        temp[2] = c;
+        sort(temp.begin(), temp.end());  // Sorting ensures positions are in increasing order
+
+        // Step 2: Initialize the answer vector
+        // ans[0] = minimum number of moves
+        // ans[1] = maximum number of moves
+        vector<int> ans(2, 0);
+
+        // Step 3: Calculate the maximum number of moves
+        // The maximum is (gap between first and third stone) - 2,
+        // because at each move you can only move one stone to reduce the outer gap by 1
+        ans[1] = (temp[2] - temp[0]) - 2;
+
+        // Step 4: Check if the stones are already consecutive (no moves needed)
+        if (temp[0] + 1 == temp[1] && temp[1] + 1 == temp[2]) {
+            return ans; // ans[0] = 0, ans[1] already calculated as 0
+        }
+
+        // Step 5: Check if any two stones are already adjacent
+        // In this case, only one move is needed to bring the third stone in line
+        if (temp[0] + 1 == temp[1] || temp[1] + 1 == temp[2]) {
+            ans[0] = 1;
+            return ans;
+        }
+
+        // Step 6: Check if a stone is exactly two positions apart from another,
+        // then we can move a stone into the middle to form a consecutive triplet
+        if (temp[0] + 2 == temp[1] && temp[1] + 1 < temp[2]) {
+            ans[0] = 1;
+            return ans;
+        }
+
+        if (temp[1] + 2 == temp[2] && abs(temp[1] - temp[0]) > 1) {
+            ans[0] = 1;
+            return ans;
+        }
+
+        // Step 7: If none of the above conditions match, we need 2 moves
+        // Move one outer stone closer, then the other
+        ans[0] = 2;
+
+        return ans;
+    }
+};
