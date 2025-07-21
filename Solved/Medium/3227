@@ -1,0 +1,12 @@
+class Solution {
+public:
+    bool doesAliceWin(string s) {
+    //Alice Wins in Each Case, except when she starts with Zero Vowels Total
+        int count = 0;
+        for(auto &v : s)
+            if(v == 'a' || v == 'e' || v == 'i' || v == 'o' || v == 'u')
+                count++;
+        if(count == 0) return false;
+            return true;
+    }
+};
