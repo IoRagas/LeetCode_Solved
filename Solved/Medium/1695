@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int maximumUniqueSubarray(vector<int>& nums) {
+        queue<int> table;
+        unordered_map<int, int> m;
+        int ans = 0, sum = 0;
+        for(auto &v : nums)
+        {
+            if(m[v] == 1) //Number already encounterd before
+            {
+                while(!table.empty() && table.front()  != v)
+                {
+                    sum -= table.front();
+                    m[table.front()] = 0;
+                    table.pop();
+                }
+                table.pop();
+                table.push(v);
+            }else
+            {
+                table.push(v);
+                sum += v;
+                m[v] = 1;
+            }
+            ans = max(ans, sum);
+        }
+        return ans;
+    }
+};
