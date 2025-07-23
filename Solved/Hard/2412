@@ -1,0 +1,35 @@
+class Solution {
+public:
+    long long minimumMoney(vector<vector<int>>& transactions) {
+        vector<pair<int, int>> first; //Positive Cashback (Profit)
+        vector<pair<int, int>> second;
+        long long ans = 0;
+        for(auto &v : transactions){
+            if(v[1] >= v[0]){
+                first.push_back({v[0], v[1]});
+            }else
+            {
+                second.push_back({v[0], v[1]});
+            }
+        }
+        sort(first.rbegin(), first.rend());
+        sort(second.begin(), second.end(), [](const auto & n1, const auto &n2){
+            return n1.second < n2.second;
+        });
+        long long mi = 999999999999999;
+        long long curr = 0;
+        for(auto &v : second)
+        {
+            curr -= v.first;
+            mi = min(mi, curr);
+            curr += v.second;
+        }
+        for(auto &v : first){
+            curr -= v.first;
+            mi = min(mi, curr);
+            curr += v.second;
+        }
+        //ans = mi * -1;
+        return abs(mi);
+    }
+};
