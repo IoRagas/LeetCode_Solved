@@ -1,0 +1,47 @@
+class Solution {
+public:
+    int maximumGain(string s, int x, int y) {
+        int ans = 0;
+        stack<char> table;
+        for(auto &v : s){
+            if(v == 'a' || v == 'b')
+            {
+                if(!table.empty())
+                {
+                    if(x >= y){
+                        if( v == 'b' && table.top() == 'a'){
+                            ans += x;
+                            table.pop();
+                            continue;
+                        }
+                    }else if(v == 'a' && table.top() == 'b')
+                    {
+                        ans += y;
+                        table.pop();
+                        continue;
+                    }
+                }
+            }
+            table.push(v); continue;
+        }
+        stack<char> temp;
+        while(!table.empty())
+        {
+           char v = table.top(); table.pop();
+           cout<<v;
+           if(!temp.empty())
+           {
+                if(v == 'a' && temp.top() == 'b')
+                {
+                    ans += x; temp.pop(); continue;
+                }else if(v == 'b' && temp.top() == 'a')
+                {
+                    ans += y; temp.pop(); continue;
+                }
+                else temp.push(v);
+           }else
+                temp.push(v);
+        }
+        return ans;
+    }
+};
