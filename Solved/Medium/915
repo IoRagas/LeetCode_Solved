@@ -1,0 +1,21 @@
+//It is a simple one, the first element will always be included to left, now any element 
+//smaller than it will also have to be included to left, and if in between two small numbers there is
+// a biggger number, then it become our current main biggest left set number
+class Solution {
+public:
+    int partitionDisjoint(vector<int>& nums) {
+        int ans = 1;
+        int curr = nums[0]; int second = -1;
+
+        for(int i = 1; i < nums.size(); i++)
+        {
+            if(nums[i] < curr){
+                curr = max(curr, second);
+                ans = i + 1;
+            }else
+                second = max(second, nums[i]);
+        }
+
+        return ans;
+    }
+};
