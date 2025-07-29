@@ -1,0 +1,17 @@
+//A simple greedy approach works in this case, just try to add as many characters to a substring as possbile
+class Solution {
+public:
+    int partitionString(string s) {
+        int ans = 0;
+        unordered_map<char, int> table;
+        for(auto &v : s){
+            if(table[v] > 0){
+                ans++;
+                table.clear();
+            }
+            table[v]++;
+        }
+        if(table.size() > 0) ans++;
+        return ans;
+    }
+};
