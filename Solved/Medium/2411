@@ -1,0 +1,36 @@
+class Solution {
+public:
+    vector<int> smallestSubarrays(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> ans(n);
+        vector<unordered_set<int>> table;
+
+        for (int i = 0; i < nums.size(); i++) {
+            unordered_set<int> temp;
+            int num = nums[i];
+            for (int bit = 0; bit < 32; ++bit)
+                if (num & (1 << bit)) temp.insert(bit); 
+            table.push_back(temp);
+        }
+        int length = 1;
+        int end = n - 1; //
+        unordered_map<int, int> curr;
+        for(int i = n - 1; i >= 0; i--)
+        {
+            for(auto &v : table[i]) curr[v]++;
+            while(end > i)
+            {
+                bool remove = true;
+                for(auto &v : table[end])
+                    if(curr[v] <= 1) remove = false;
+                if(remove == false) break;
+                for(auto &v : table[end]) curr[v]--;
+                end--; length--;
+            }
+            ans[i] = length;
+            length++;
+        }
+
+        return ans;
+    }
+};
