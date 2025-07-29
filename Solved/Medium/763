@@ -1,0 +1,38 @@
+//An Interval Problem, Overlapping ones become One
+class Solution {
+public:
+    vector<int> partitionLabels(string s) {
+        vector<pair<int, int>> table(26, {-1, -1});
+        for(int i = 0; i < s.size(); i++)
+        {
+            int n = (s[i] - 'a');
+            if(table[n].first == -1){
+                table[n] = {i, i};
+            }else
+            {
+                table[n].second = i; //End of Interval
+            }
+        }
+        vector<pair<int, int>> tt;
+        for(auto &v : table) if(v.first == -1) continue; else tt.push_back(v);
+        cout<<tt.size();
+        sort(tt.begin(), tt.end());
+        vector<int> ans;
+        int start = tt[0].first, end = tt[0].second;
+        for(int i = 1; i < tt.size(); i++)
+        {
+            int a = tt[i].first, b = tt[i].second;
+            if(a > end) //Separate Events
+            {
+                ans.push_back(end - start + 1);
+                start = a; end = b;
+            }
+            else{
+                end = max(end, b);
+            }
+            if(i + 1 == tt.size()) ans.push_back(end - start + 1);
+        }
+        if(ans.size() == 0) ans.push_back(end - start + 1);
+        return ans;
+    }
+};
