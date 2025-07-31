@@ -1,0 +1,18 @@
+class Solution {
+public:
+    int subarrayBitwiseORs(vector<int>& arr) {
+        set<int> ans;
+        set<int> table; 
+        for(auto &v : arr){
+            set<int> temp;
+            for(auto &vv : table)
+                temp.insert(v | vv);
+            table = temp;
+            table.insert(v);
+            for(auto &z : table)
+                ans.insert(z);
+        }
+
+        return ans.size();
+    }
+};
