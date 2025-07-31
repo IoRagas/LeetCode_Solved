@@ -1,0 +1,38 @@
+class Solution {
+public:
+    const int MOD = 1e9  +7;
+    //Fast Exponentation
+    long long modpow(long long base, long long exp, long long mod) {
+    long long result = 1;
+    base = base % mod; // handle large base
+    while (exp > 0) {
+        if (exp % 2 == 1) {
+            result = (result * base) % mod; // multiply if the bit is 1
+        }
+        base = (base * base) % mod; // square the base
+        exp /= 2; // move to the next bit
+    }
+    return result;
+}
+    long long even(long long x)
+    {
+        //This function returns the Number of ways
+        //for even digits to be placed in x spots
+        return ((long long)(modpow(5, x , MOD))) % MOD;
+    }
+    long long odd(long long x)
+    {
+        //This function returns the Number of ways
+        //for odd digits to be placed in x spots
+        return ((long long)(modpow(4, x, MOD)));
+    }
+    int countGoodNumbers(long long n) {
+        if( n == 1) return 5;
+        long long e = (long long)n / 2 + (n % 2);
+        long long o = (long long)n / 2; 
+        cout<<odd(o);
+        long long temp = (long long)(even(e) * odd(o) ) % MOD;
+        int ans = (int)temp;
+        return ans;
+    }
+};
