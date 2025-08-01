@@ -1,0 +1,30 @@
+//Just Remove the most recent encountered smallest charcter before the star
+//Using a simple map (To get the result in sorted order)
+class Solution {
+public:
+    string clearStars(string s) {
+        map<char, stack<int>> table;
+        vector<bool> t(s.size(), false);
+        for(int i = 0; i < s.size(); i++)
+        {
+            if(s[i] != '*'){
+                table[s[i]].push(i);
+            }else{
+                for(auto &v : table)
+                {
+                    if(v.second.size() == 0) continue;
+                    int z = v.second.top(); v.second.pop();
+                    t[z] = true;
+                    break;
+                }
+            }
+        }
+        string ans = "";
+        for(int i = 0; i < s.size(); i++)
+        {
+            if(s[i] == '*' || t[i] == true) continue;
+            ans += s[i];
+        }
+        return ans;
+    }
+};
