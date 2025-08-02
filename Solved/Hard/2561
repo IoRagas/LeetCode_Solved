@@ -1,0 +1,45 @@
+class Solution {
+public:
+    long long minCost(vector<int>& basket1, vector<int>& basket2) {
+        long long ans = 0;
+        unordered_map<int, int> b1, b2; unordered_set<int> vals;
+        int sorter = INT_MAX;
+        for(auto &v: basket1){
+            b1[v]++;
+            vals.insert(v);
+        }
+        for(auto &v : basket2){
+            b2[v]++;
+            vals.insert(v);
+        }
+        //No Separation Possible
+        for(auto &v : vals)
+        {
+            if( b1[v] + b2[v] % 2 == 1) return -1; //Not Possible
+            sorter = min(sorter, v);
+        }
+        vector<int> vect1, vect2; //Values to be exchanged from both arrays
+        for(auto &v : vals)
+        {
+            if(b1[v] == b2[v]) continue; //Same Amount of digits so continue
+            int mm = abs(b1[v] - b2[v]) / 2;
+            vector<int>* ptr;
+            if(b1[v] > b2[v]) 
+                ptr = &vect1;
+            else
+                ptr = &vect2; 
+            while(mm--){
+                ptr->push_back(v);
+            }
+        }
+        //Vect1 and Vect2 shuold be equal at this point
+        sort(vect1.begin(), vect1.end());
+        sort(vect2.rbegin(), vect2.rend());
+        for(int i = 0; i < vect1.size(); i++)
+        {
+            int curr = min(vect1[i], vect2[i]);
+            ans += min(curr, sorter * 2);
+        }
+        return ans;
+    }
+};
