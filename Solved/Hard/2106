@@ -1,0 +1,35 @@
+// Left->Right->Left  OR Right->Left->Right NOT Optimal
+// Either Full Left, Full Right, Left->Right, Right->Left
+class Solution {
+public:
+    int maxTotalFruits(vector<vector<int>>& fruits, int startPos, int k) {
+        int ans = 0;
+        vector<int> left(k + 1, 0); //Number of Fruits you can harvest if you move i steps to the left
+        vector<int> right(k + 1, 0); //For Right Side
+        unordered_map<int, int> table; //Position -> FruitAmount
+        for(auto &v : fruits)
+            table[v[0]] = v[1];
+        //For Full Left
+            left[0] = 0;
+            right[0] = 0;
+        for(int i = 1; i <= k ; i++)
+        {
+            int r = startPos + i; //Move right
+            int l = startPos - i; 
+            left[i] = left[i - 1] + table[l];
+            right[i] = right[i - 1] + table[r];
+        }
+        if(k == 0) return table[startPos];
+        ans = 0;
+        for(int i = k; i >= 0 ; i--)
+        {
+            int gap = k - i;
+            gap = gap / 2; //Two Way Trip Steps
+            int t1 = left[i] + right[gap];
+            int t2 = right[i] + left[gap];
+            ans = max(ans, t1);
+            ans = max(ans, t2);
+        }
+        return ans + table[startPos];
+    }
+};
