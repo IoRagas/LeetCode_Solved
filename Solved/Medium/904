@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int totalFruit(vector<int>& fruits) {
+        int start = 0;
+        int end = 1;
+        unordered_map<int, int> table;
+        int ans = 1, curr = 1;
+        table[fruits[start]] = 1;
+        while(end < fruits.size())
+        {
+            table[fruits[end]]++;
+            if(table[fruits[end]] == 1 && curr == 2)
+            {
+                //Remove fruit until
+                while(start < end){
+                    table[fruits[start]]--;
+                    if(table[fruits[start]] == 0) break;
+                    start++;
+                }
+                start++;
+                curr = 2;
+            }
+            if(table[fruits[end]] == 1 && curr == 1) curr++;
+            ans = max(ans, end - start + 1);
+            end++;
+        }
+        return ans;
+    }
+};
