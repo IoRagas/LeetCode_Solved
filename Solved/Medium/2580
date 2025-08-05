@@ -1,0 +1,54 @@
+//Used Some Code From The Merge Intervals Problem(56)
+class Solution {
+public:
+    const int MOD = 1e9 + 7;
+
+    // Fast modular exponentiation: (base^exp) % mod
+    long long mod_pow(long long base, long long exp, int mod) {
+        long long result = 1;
+        base %= mod;
+
+        while (exp > 0) {
+            if (exp % 2 == 1)
+                result = (result * base) % mod;
+
+            base = (base * base) % mod;
+            exp /= 2;
+        }
+
+        return result;
+    }
+
+    int countWaysToSplit(int n) {
+        if (n < 2) return 0; // cant split fewer than 2 items into two non-empty groups
+
+        long long power = mod_pow(2, n - 1, MOD);
+        return (power + MOD) % MOD;  
+    }
+
+    int countWays(vector<vector<int>>& intervals) {
+        int ans = 0;
+        sort(intervals.begin(), intervals.end());
+        int start = intervals[0][0];
+        int end = intervals[0][1];
+        for(int i = 1; i < intervals.size(); i++)
+        {
+            if(intervals[i][0] > end)
+            {
+                ans++;
+                start =intervals[i][0];
+                end = intervals[i][1];
+                continue;
+            }
+            else
+            {
+                end = max(end, intervals[i][1]);
+            }
+        }
+        ans++;
+        //Ans stores the Number of Non Overlapping Intervals
+        int r =  countWaysToSplit(ans);
+        if(r == 0) return 2;
+        return ((long long)r * 2 )% MOD;
+    }
+};
