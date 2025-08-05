@@ -1,0 +1,61 @@
+class Solution {
+public:
+    vector<int> peopleIndexes(vector<vector<string>>& favoriteCompanies) {
+        unordered_map<string, int> converter;
+        int id = 1;
+        vector<pair<int, vector<int>>> table;
+
+        // Convert company names to unique integers
+        for (int i = 0; i < favoriteCompanies.size(); i++) {
+            vector<int> temp;
+            for (string& company : favoriteCompanies[i]) {
+                if (!converter.count(company)) {
+                    converter[company] = id++;
+                }
+                temp.push_back(converter[company]);
+            }
+            table.push_back({i, temp});
+        }
+
+        // Sort sets by size (smallest first)
+        sort(table.begin(), table.end(), [](auto &a, auto &b) {
+            if (a.second.size() == b.second.size())
+                return a.first < b.first;
+            return a.second.size() < b.second.size();
+        });
+
+        int n = table.size();
+        vector<bool> isSubset(n, false);
+
+        for (int i = 0; i < n - 1; i++) {
+            vector<int>& s = table[i].second;
+            for (int j = i + 1; j < n; j++) {
+                vector<int>& b = table[j].second;
+                if (b.size() < s.size()) continue;
+
+                unordered_set<int> bSet(b.begin(), b.end());
+                bool subset = true;
+                for (int x : s) {
+                    if (!bSet.count(x)) {
+                        subset = false;
+                        break;
+                    }
+                }
+                if (subset) {
+                    isSubset[i] = true;
+                    break;
+                }
+            }
+        }
+
+        vector<int> ans;
+        for (int i = 0; i < n; i++) {
+            if (!isSubset[i]) {
+                ans.push_back(table[i].first); // return original index
+            }
+        }
+
+        sort(ans.begin(), ans.end()); // optional: return in sorted order
+        return ans;
+    }
+};
