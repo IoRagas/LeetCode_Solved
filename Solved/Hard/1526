@@ -1,0 +1,18 @@
+//THE EASIEST HARD EVERRRRRRR
+class Solution {
+public:
+    int minNumberOperations(vector<int>& target) {
+        int ans = 0 ;
+        int curr = target[0]; ans += curr;
+        for(int i = 1; i < target.size(); i++)
+        {
+            if(target[i] > curr)
+            {
+                ans += target[i] - curr;
+                curr = target[i];
+            }else
+                curr = target[i];
+        }
+        return ans;
+    }
+};
