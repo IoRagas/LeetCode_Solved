@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int numberOfArithmeticSlices(vector<int>& nums) {
+        if(nums.size() <= 2) return 0;
+        //nums.push_back(INT_MAX);
+        int ans = 0;
+        int diff = nums[1] - nums[0];
+        int curr = 1;
+        for(int i = 1; i < nums.size(); i++){
+            if(nums[i] - nums[i - 1] != diff){ //New Slice
+                if(curr >= 3)
+                ans += (curr - 3 + 1)*(curr - 3 + 2) / 2; 
+                curr = 2;
+                diff = nums[i] - nums[i-1];
+            }else{
+                curr++;
+            }
+        }
+        if(curr >= 3)
+        ans += (curr - 3 + 1)*(curr - 3 + 2) / 2; 
+
+        return ans;
+    }
+};
