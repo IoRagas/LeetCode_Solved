@@ -1,0 +1,127 @@
+//The Optimal Combination is joining each tree, from the centre of their diameter point
+//first1, first2 : Used to find one corner of the diameter
+//getEdges used to find the other corner
+//dfs, dfs1, used to compute the , nearest end node distance for each node
+class Solution {
+public:
+    vector<int> tree1, tree2;
+    vector<vector<int>> t1, t2; //Adjacency List
+    int t1a = 0, t1b = 0, t2a = 0, t2b = 0;
+    int srs1 = 0, srs2 = 0;
+    int ans = 0;
+    void dfs(int curr, int prev, int dist)
+    {   
+        tree1[curr] = max(tree1[curr], dist);
+        for(auto &v : t1[curr])
+            if(v == prev) continue;
+            else dfs(v, curr , dist+1);
+        return ;
+    }
+    void dfs1(int curr, int prev, int dist)
+    {   
+        tree2[curr] = max(tree2[curr], dist);
+        for(auto &v : t2[curr])
+            if(v == prev) continue;
+            else dfs1(v, curr , dist+1);
+        return ;
+    }
+    void getEdges(int curr, int prev, int dist)
+    {
+        if(dist > srs1)
+        {
+            t1b = curr; 
+            srs1 = dist;
+        }
+        for(auto &v : t1[curr])
+        {
+            if(v == prev)
+                continue;
+            else
+                getEdges(v , curr , dist + 1);
+        }
+    }
+    void getEdges2(int curr, int prev, int dist)
+    {
+        if(dist > srs2)
+        {
+            t2b = curr;
+            srs2 = dist; 
+        }
+        for(auto &v : t2[curr])
+        {
+            if(v == prev)
+                continue;
+            else
+                getEdges2(v , curr , dist + 1);
+        }
+    }
+    int k1 = 0, k2 = 0;
+    void first1(int curr, int prev, int dist)
+    {
+        if(dist > k1)
+        {
+            t1a = curr;
+            k1 = dist;
+        }
+        for(auto &v : t1[curr])
+            if(v == prev) continue;
+            else first1(v, curr, dist + 1);
+    }
+    void first2(int curr, int prev, int dist)
+    {
+        if(dist > k2)
+        {
+            t2a = curr;
+            k2 = dist;
+        }
+        for(auto &v : t2[curr])
+            if(v == prev) continue;
+            else first2(v, curr, dist + 1);
+    }
+    int minimumDiameterAfterMerge(vector<vector<int>>& edges1, vector<vector<int>>& edges2) {
+ 
+        tree1 = vector<int>((int)edges1.size() + 1, 0);
+        tree2 = vector<int>((int)edges2.size() + 1), 0;
+        t1 = vector<vector<int>>(edges1.size() + 1);
+        t2 = vector<vector<int>>(edges2.size() + 1);
+        for(auto &v : edges1)
+        {
+            t1[v[0]].push_back(v[1]);
+            t1[v[1]].push_back(v[0]);
+        }
+        for(auto & v : edges2)
+        {
+            t2[v[0]].push_back(v[1]);
+            t2[v[1]].push_back(v[0]);
+        }
+        first1(0, -1, 0);
+        first2(0, -1, 0);
+        getEdges(t1a, -1, 0);
+        getEdges2(t2a, -1, 0);
+        dfs(t1a, -1, 0);
+        dfs(t1b, -1, 0);
+        dfs1(t2a, -1, 0);
+        dfs1(t2b, -1, 0);
+       // cout<<t1a<<" "<<t1b <<" "<<srs1<<endl;
+        //cout<<t2a<<" "<<t2b<<" "<<srs2<<endl;
+        //ans = ceil((float)srs1 / 2.0) + ceil((float)srs2 / 2.0) + 1;
+        
+        int mm = INT_MAX; int m = INT_MAX;
+        for(int i = 0; i < tree1.size(); i++)
+        {
+          //  cout<<tree1[i]<<" ";
+            mm = min(mm, tree1[i]);
+        }
+        for(auto &v : tree2)
+        {
+             m = min(m, v);
+        }   
+        ans = mm + m  + 1;
+        for(auto &v : tree1)
+            ans = max(v , ans);
+        for(auto &v : tree2)
+            ans = max(v, ans);
+            
+        return ans;
+    }
+};
