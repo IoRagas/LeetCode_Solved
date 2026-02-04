@@ -1,0 +1,62 @@
+class Solution {
+public:
+    vector<pair<bool, bool>> type; // FirstBit :: 0 : Increasing, 1 : Decreasing , SecondBit :: 0 : Valid, 1 : Invalid
+    vector<pair<long long, long long>> values; // First :: LeftSide Maximun, Second :: RightSide Maximum 
+    int q = 0; // Increase, Decrease Subarrays
+    int n = 0; //Nums.size()
+    long long INF = (long long)INT_MIN * 2 - 1;
+    void fun(vector<int>& nums)
+    {
+        values[0].first = INF;
+        values[n - 1].second = INF;
+        for(int i = 1; i < n; i++)
+        {
+            if(nums[i] > nums[i - 1])
+            {
+                values[i].first = max((long long)nums[i] + nums[i - 1], (long long)nums[i] + values[i-1].first);  
+            }else{ //Not Equal
+                values[i].first = INF;
+            }
+        }
+        for(int i = n - 2; i >= 0; i--)
+        {
+            if(nums[i] < nums[i + 1])
+            {
+                values[i].second = max( (long long)nums[i] + nums[i + 1], (long long)nums[i] + values[i + 1].second);
+            }else
+            {
+                values[i].second = INF;
+            }
+        }
+        //for(auto &v : values) cout<<v.first<<" ";
+    }
+    long long maxSumTrionic(vector<int>& nums) {
+        long long ans = INF; n = (int)nums.size();
+        values = vector<pair<long long, long long>>(n); //At index i , whats the maximum value we can get to its left and right
+        fun(nums);
+        int start = 1, end = 1;
+        while(start < n - 1)
+        {
+            end = start;
+            long long sum = 0;
+            if(nums[start] < nums[start - 1])
+            { //Find the End point
+                while(end < n - 1 && nums[end] > nums[end + 1])
+                {
+                    sum += nums[end];
+                    end++;
+                } 
+                if(values[end].second != INF && values[start - 1].first != INF)
+                {
+                    if(ans == INF)
+                        ans = values[end].second + sum + values[start - 1].first;
+                    else
+                        ans = max(ans, values[end].second + sum + values[start - 1].first);
+                }
+            }
+            //cout<<start<<" "<<end<<endl;
+            start += (end - start + 1);
+        }
+        return ans;
+    }
+};
