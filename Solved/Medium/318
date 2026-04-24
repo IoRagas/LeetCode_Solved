@@ -1,0 +1,29 @@
+//Looking at the Input Constraints a simple bruteforce would work
+class Solution {
+public:
+    int maxProduct(vector<string>& words) {
+        int ans = 0; int n = words.size();
+        vector<vector<int>> table(n, vector<int>(26, 0));
+        for(int i = 0; i < n; i++)
+        {   
+            for(auto &v : words[i])
+                table[i][v-'a']++;
+        }
+        for(int i = 0; i < n ; i++)
+        {
+            for(int j = i + 1; j < n; j++)
+            {
+                bool valid = true;
+                for(auto &v : words[i])
+                {
+                    if(table[j][v-'a'] > 0){
+                        valid = false; break;
+                    }
+                }
+                if(valid)
+                ans = max(ans, (int)words[i].size() * (int)words[j].size());
+            }
+        }
+        return ans;
+    }
+};
