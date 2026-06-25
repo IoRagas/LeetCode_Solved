@@ -1,0 +1,15 @@
+#Brute Force works ig ( n <= 1000 ) 
+class Solution:
+    def countMajoritySubarrays(self, nums: List[int], target: int) -> int:
+        ans = 0
+        n = len(nums)
+
+        for i in range(0, n) :
+            freq = 0
+            for j in range(i, n) :
+                if nums[j] == target :
+                    freq += 1
+                if freq > ((j - i + 1) / 2 ) :
+                    ans += 1
+
+        return ans
