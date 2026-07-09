@@ -1,0 +1,30 @@
+class Solution {
+public:
+    
+    //First tried the DSU, but this one is a beauty
+    vector<bool> pathExistenceQueries(int n, vector<int>& nums, int maxDiff, vector<vector<int>>& queries) {
+       vector<bool> ans(queries.size());
+        vector<int> parent(n);
+        for(int i = 0; i < n ; i++) parent[i] = i;
+       int k = 0;
+       for(int i = 0; i < n; i++)
+       {
+            int find = nums[i] + maxDiff;
+            auto it = upper_bound(nums.begin() + i, nums.end(), find);
+            int z = std::distance(nums.begin(), it);
+            int assign = parent[i];
+            int q = z - 1;
+            while(q > i && parent[q] != assign)
+            {
+                parent[q] = assign;
+                q--;
+            }
+       }
+
+        for(int i = 0; i < queries.size() ; i++)
+        {
+            ans[i] = (parent[queries[i][0]] == parent[queries[i][1]]) ;
+        }
+        return ans;    
+    }
+};
