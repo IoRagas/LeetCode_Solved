@@ -1,0 +1,14 @@
+#Just read the question statement, and you will know greedy will be optimal 
+class Solution:
+    def minSetSize(self, arr: List[int]) -> int:
+        ans = 0
+        half = (len(arr) / 2)
+        count = 0
+        freq = Counter(arr)
+        table = sorted(freq.values(), reverse=True)
+        for i in table : 
+            if count >= half :
+                break
+            ans += 1
+            count += i
+        return ans
