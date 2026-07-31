@@ -1,0 +1,22 @@
+# A simple greedy solution will work, the one with the most frequency, assign it to the least touch characters
+class Solution:
+    def minimumPushes(self, word: str) -> int:
+        ans = 0
+        used1 = 8
+        used2 = 8
+        used3 = 8
+        freq = Counter(word)
+        table = sorted(freq.values(), reverse=True)
+        for i in table :
+            if used1 > 0 :
+                ans += i
+                used1 -= 1
+            elif used2 > 0 :
+                ans += (i * 2)
+                used2 -= 1
+            elif used3 > 0 : 
+                ans += ( i * 3)
+                used3 -= 1
+            else :
+                ans += ( i * 4)
+        return ans
