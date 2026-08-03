@@ -1,0 +1,57 @@
+//Never doing a hard DP question again.
+class Solution {
+public:
+    string stoneGameIII(vector<int>& stoneValue) {
+        int n = stoneValue.size();
+        vector<int> table(n), count(n);
+
+        table[n - 1] = stoneValue[n - 1];
+        count[n - 1] = 0; // only one stone possible here, no real choice
+
+        if (n >= 2) {
+            if (stoneValue[n - 1] >= 0) {
+                count[n - 2] = 1; // took 2 stones
+                table[n - 2] = stoneValue[n - 2] + stoneValue[n - 1];
+            } else {
+                count[n - 2] = 0; // took 1 stone
+                table[n - 2] = stoneValue[n - 2];
+            }
+        }
+
+        for (int i = n - 3; i >= 0; i--) {
+            // Take 1 stone
+            int t1 = stoneValue[i];
+            int next1 = i + count[i + 1] + 2;
+            if (next1 < n) t1 += table[next1];
+
+            // Take 2 stones
+            int t2 = stoneValue[i] + stoneValue[i + 1];
+            int next2 = i + count[i + 2] + 3;   
+            if (next2 < n) t2 += table[next2];  
+
+            // Take 3 stones
+            int t3 = stoneValue[i] + stoneValue[i + 1] + stoneValue[i + 2];
+            if (i + 3 < n) {                  
+                int next3 = i + count[i + 3] + 4;  
+                if (next3 < n) t3 += table[next3];
+            }
+
+            if (t1 >= t2 && t1 >= t3) {
+                count[i] = 0; table[i] = t1;
+            } else if (t2 >= t1 && t2 >= t3) {
+                count[i] = 1; table[i] = t2;
+            } else {
+                count[i] = 2; table[i] = t3;
+            }
+        }
+
+        long long total = 0;
+        for (int v : stoneValue) total += v;
+        long long aliceScore = table[0];
+        long long bobScore = total - aliceScore;
+
+        if (aliceScore > bobScore) return "Alice";
+        if (aliceScore < bobScore) return "Bob";
+        return "Tie";
+    }
+};
