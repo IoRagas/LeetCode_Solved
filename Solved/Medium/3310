@@ -1,0 +1,47 @@
+class Solution {
+public:
+    // Nvm, a simple BFS will work, just use Sets.
+    // Feels something like Union Find
+    vector<int> remainingMethods(int n, int k, vector<vector<int>>& invocations) {
+        vector<bool> valid(n, true);
+        vector<vector<int>> table(n, vector<int>());
+        for(auto &v :  invocations){
+            table[v[0]].push_back(v[1]); // Edge from v[0] to v[1]
+        }
+        set<int> infected; 
+        queue<int> q; q.push(k);
+        //Start a bfs from Infected Node
+        while(q.empty() == false){
+            int z = q.front(); q.pop();
+            if(infected.find(z) != infected.end())
+                continue;
+            infected.insert(z);
+            for(auto &v : table[z]){ //Outgoing edges from this infected Node
+                q.push(v);
+            }
+        }
+        bool remove = true;
+        for(int i = 0; i < n; i++)
+        {
+            if(infected.find(i) == infected.end())
+            {
+                for(auto &v : table[i])
+                {
+                    if(infected.find(v) != infected.end())
+                    {
+                        remove = false;
+                        break;
+                    }
+                }
+            }
+        }
+        vector<int> ans;
+        if(remove == false)
+        {
+            for(int i = 0; i < n ; i++) ans.push_back(i);
+        }else{
+            for(int i = 0; i < n; i++) if(infected.find(i) == infected.end()) ans.push_back(i);
+        }
+        return ans;
+    }
+};
