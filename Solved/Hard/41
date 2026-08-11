@@ -1,0 +1,50 @@
+//You better not ask me how this works.
+//Sagar if you're reading this in the future, damn, you should be doing something else lad, TOUCH SOME GRASS
+class Solution {
+public:
+    int firstMissingPositive(vector<int>& nums) {
+        int ans = 0;
+        int n = nums.size();
+        for(int i = 0; i < n; i++)
+            if(nums[i] < 0 || nums[i] > n) nums[i] = 0;
+        int right = n-1;
+        for(int i = 0; i < n && i < right; i++)
+        {
+            while(right > 0 && nums[right] == 0) right--;
+            if(nums[i] == 0){
+                swap(nums[i], nums[right]);
+            }
+        }
+        for(auto &v : nums) cout<<v<<" ";
+        for(int i = 0; i < n ; i++)
+        {
+            if(nums[i] == 0 ) break;
+            if(nums[i] > 0 && nums[i] <= n)
+            {
+                swap(nums[i],nums[nums[i] - 1]);
+               if(nums[i] > 0 && nums[i] <= n && nums[i] != i + 1)
+                {
+                    while(nums[i] != 0 && nums[i] != i+1)
+                    {
+                        if(nums[nums[i]-1]== nums[i])break;
+                        swap(nums[i], nums[nums[i]-1]);
+                    }
+                }
+            }
+        }
+        int count = 1;
+        for(int i = 0; i < nums.size() ;i++)
+        {
+            if(nums[i] == 0) continue;
+            if(nums[i] != count)
+            {
+                ans = count;
+                break;
+            }else{
+                count++;
+            }
+        }
+        if(ans == 0 )ans = count;
+        return ans;
+    }
+};
