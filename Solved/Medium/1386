@@ -1,0 +1,30 @@
+// I mean, have a look at the constraints, and just go by subtracting the invalid rows from the already maximum answer
+class Solution {
+public:
+    int maxNumberOfFamilies(int n, vector<vector<int>>& reservedSeats) {
+        unordered_map<int, vector<int>> arr;
+        int ans = n * 2;
+        for(auto &v : reservedSeats)
+            arr[v[0]].push_back(v[1]);
+        for(auto &v : arr)
+        {
+            bool left = true, right = true, middle = true;
+            for(auto &vv : v.second)
+            {
+                if(vv > 1 && vv <= 3) left = false;
+                if(vv > 3 && vv < 8)
+                {
+                    middle = false;
+                    if(vv < 6) left = false;
+                    else right = false;
+                } 
+                if(vv >= 8 && vv <= 9) right = false;
+            }
+            if(left && right) continue;
+            if(middle || left || right){
+                ans -= 1; continue;
+            }else ans -= 2;
+        }
+        return ans;
+    }
+};
