@@ -1,0 +1,41 @@
+//Just keep the DAG property in mind, and process all prerequisites before traversing the current one
+// So like to get a current course determine the max of its prerequisite
+class Solution {
+public:
+    int minimumTime(int n, vector<vector<int>>& relations, vector<int>& time) {
+        vector<int> table(n+1, 0); //Current Time required to get there
+        vector<int> indegree(n+1);
+        int ans = 0;
+        vector<vector<int>> graph(n + 1, vector<int>());
+        for(auto &v : relations){
+            graph[v[0]].push_back(v[1]);
+            indegree[v[1]]++;
+        }
+        queue<int> q;
+       // for(auto &v : graph) cout<<v.size()<<" ";
+        for(int i= 1; i <= n; i++) if(indegree[i] == 0) q.push(i); 
+        while(!q.empty())
+        {
+            int curr = q.front(); q.pop();
+           // cout<<curr.first<<" "<<curr.second<<endl;
+            //cout<<"Hello";
+            //table[curr.first] = curr.second;
+            for(auto &v : graph[curr])
+            {
+               // cout<<"Hello";
+              // if(table[curr] == -1) table[curr] = 0;
+               int val = table[curr] + time[curr - 1];
+               indegree[v]--;
+               if(indegree[v] == 0)
+               {
+                    table[v] = max(table[v], val);
+                    q.push(v);
+               } 
+                else
+                table[v] = max(table[v], val);
+            }
+        }
+        for(int i = 1; i <= n; i++) ans = max(ans, table[i]+time[i-1]); //Time taken to get there + Time to complete that course
+        return ans;
+    }
+};
