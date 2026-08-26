@@ -1,0 +1,59 @@
+//Lets not ask how this works, just works
+class Solution {
+public:
+    string shortestBeautifulSubstring(string s, int k) {
+        string ans = ""; int n = s.size();
+        int start = 0;int end = 0; int count = 0;
+        while(start < n && s[start] == '0')
+            start++;
+        if(start < n){
+            end = start;
+            count += 1;
+            if(k == 1) ans = "1";
+        }
+        while(start <=end && end < n)
+        {
+            //Reduce from start
+            if(count == k){
+                while(start < end && s[start] == '0') start++;
+                if(s[start] == '1')
+                {
+                    count -= 1;
+                    start++;
+                    while(start < end && s[start] == '0') start++;
+                }
+            }
+            if(count < k )
+            {
+                end++;
+                if(end == n) break;
+                while(count < k && end < n )
+                {
+                    if(s[end] == '1')count++;
+                    if(count == k) break;
+                    end++;
+                }
+            }
+            if(count == k && (end-start+1 <= ans.size() || ans == ""))
+            {
+                //cout<<"start : "<<start<<" end : "<<end<<endl;
+                string temp = s.substr(start, end-start+1);
+                cout<<temp<<" \n";
+                if(temp == "") continue;
+                if(temp.size() < ans.size()|| ans == ""){
+                    ans = temp;
+                }else{
+                    for(int i = 0; i < ans.size(); i++)
+                    {
+                        if(temp[i] < ans[i])
+                        {
+                            ans = temp; break;
+                        }else if(ans[i] < temp[i]) break;
+                    }
+                }
+            }
+        }
+        bool exist = true;
+        return ans;
+    }
+};
