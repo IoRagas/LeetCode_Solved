@@ -1,0 +1,139 @@
+//Wallahi somehow made it work
+class Solution {
+public:
+    string lexGreaterPermutation(string s, string target) {
+        string end = target;
+        string ans = "";
+
+        int n = s.size();
+        int table[26] = {0};
+        int temp[26] = {0};
+
+        bool exists = false;
+
+        for (auto &v : s)
+            table[v - 'a']++;
+
+        std::copy(std::begin(table), std::end(table), std::begin(temp));
+
+        int kk = 0;
+        for (int z = 25; z >= 0; z--) {
+            while (temp[z] > 0) {
+                end[kk++] = (char)(z + 'a');
+                temp[z]--;
+            }
+        }
+
+        std::copy(std::begin(table), std::end(table), std::begin(temp));
+
+        int i = 0;
+
+        for (i = 0; i < n; i++) {
+            int index = target[i] - 'a';
+
+            if (table[index] > 0) {
+                table[index] -= 1;
+            }
+            else {
+                int q = index + 1;
+
+                for (; q < 26; q++) {
+                    if (table[q] > 0) {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                if (exists == false) {
+
+                    for (int j = i - 1; j >= 0; j--) {
+                      
+                        int prev = target[j] - 'a';
+                        table[prev]++;
+                        
+                        int q2 = prev + 1;
+
+                        for (; q2 < 26; q2++) {
+                            if (table[q2] > 0)
+                                break;
+                        }
+
+                        if (q2 < 26) {
+                            ans = target;
+
+                            ans[j] = (char)(q2 + 'a');
+                            table[q2]--;
+
+                         
+                            int k = j + 1;
+
+                            for (int z = 0; z < 26; z++) {
+                                while (table[z] > 0) {
+                                    ans[k++] = (char)(z + 'a');
+                                    table[z]--;
+                                }
+                            }
+
+                            return ans;
+                        }
+                    }
+
+                    return "";
+                }
+
+                ans = target;
+                ans[i] = (char)(q + 'a');
+                table[q] -= 1;
+
+                int k = i + 1;
+
+                for (int z = 0; z < 26; z++) {
+                    while (table[z] > 0) {
+                        ans[k++] = (char)(z + 'a');
+                        table[z]--;
+                    }
+                }
+
+                break;
+            }
+        }
+
+        if (ans == "") {
+            for (int j = n - 1; j >= 0; j--) {
+
+                int prev = target[j] - 'a';
+
+                table[prev]++;
+
+                int q = prev + 1;
+
+                for (; q < 26; q++) {
+                    if (table[q] > 0)
+                        break;
+                }
+
+                if (q < 26) {
+                    ans = target;
+
+                    ans[j] = (char)(q + 'a');
+                    table[q]--;
+
+                    int k = j + 1;
+
+                    for (int z = 0; z < 26; z++) {
+                        while (table[z] > 0) {
+                            ans[k++] = (char)(z + 'a');
+                            table[z]--;
+                        }
+                    }
+
+                    return ans;
+                }
+            }
+
+            return "";
+        }
+
+        return ans;
+    }
+};
