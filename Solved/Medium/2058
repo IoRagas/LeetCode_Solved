@@ -1,0 +1,38 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+ // A pretty simple solution, O(n) solution, just solve in one iteration, keeping account of starting and previous critical point....:)
+ //If you're reading this... GET A LIFE
+class Solution {
+public:
+    vector<int> nodesBetweenCriticalPoints(ListNode* head) {
+        int start = -1, end = -1;
+        int minimum = INT_MAX, maximum = INT_MIN;
+        int count = 0; ListNode* curr = head;ListNode* prev = head;
+        curr = curr ->next;
+        int pos = 1; 
+        while(curr->next)
+        {
+            if(( curr->val > prev->val && curr->val > curr->next->val) || ( curr->val < prev->val && curr->val < curr->next->val) )
+            {
+                if(start == -1) start = pos;
+                if(end != -1) minimum = min(minimum, pos - end);
+                end = pos;
+            }
+            prev = curr;
+            curr = curr->next;
+            pos += 1;
+        }
+        if(start != -1 && end != -1) maximum = end - start;
+        if(minimum == INT_MAX || maximum == INT_MIN)
+            return {-1, -1};
+        return {minimum, maximum};
+    }
+};
