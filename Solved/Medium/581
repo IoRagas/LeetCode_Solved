@@ -1,0 +1,50 @@
+//The main intuition being, you gotta find the starting point, and then you gotta find the ending point.
+//Using monotonic stack you can effectively, find out the starting as well as ending point.
+class Solution {
+public:
+    int findUnsortedSubarray(vector<int>& nums) {
+        int ans = 0; int n = nums.size();
+        int start = n;
+        stack<int> left; left.push(0);
+        for(int i = 1; i < n; i++)
+        {
+            if(nums[i] >= nums[left.top()])
+            {
+                left.push(i);
+                continue;
+            } 
+            
+            while(!left.empty() && nums[i] < nums[left.top()])
+            {
+                left.pop();
+            }
+            if(left.size() == 0) start = 0;
+            else start = min(start, left.top() + 1);
+            left.push(i);
+        }
+        //At this point we got the starting point
+        //Now do the same for the ending point
+        int end = -1;
+        stack<int> right; right.push(n-1);
+        for(int i = n - 2; i >= 0 ; i--)
+        {
+            if(nums[i] <= nums[right.top()])
+            {
+                right.push(i);
+                continue;
+            } 
+            
+            while(!right.empty() && nums[i] > nums[right.top()])
+            {
+                right.pop();
+            }
+            if(right.size() == 0) end = n-1;
+            else end = max(end, right.top() - 1);
+            right.push(i);
+        }
+        //cout<<start<<" "<<end;
+        if(start == n || end == -1) ans = 0;
+        else ans = end - start + 1;
+        return ans;
+    }
+};
