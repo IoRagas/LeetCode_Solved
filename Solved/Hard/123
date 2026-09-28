@@ -1,0 +1,35 @@
+//Too ez ig
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int n = prices.size();
+        vector<vector<int>> table(n, vector<int>(3));
+        int curr = prices[0];
+        int ans = 0;
+        for(int i = 1; i < n; i++)
+        {
+            if(prices[i] > curr)
+            {
+                table[i][1] = max(table[i - 1][1], prices[i] - curr);
+            }else 
+            {
+                table[i][1] = table[i-1][1];
+                curr = prices[i];
+            }
+            ans = max(table[i][1], ans);
+        }
+        curr = prices[n-1]; int right = 0;
+        for(int i = n - 2; i >= 1; i--)
+        {
+            if(prices[i] > curr){
+                curr = prices[i];
+            }else
+            {
+                right = max(right, curr - prices[i]);
+            }
+            ans = max(ans, right + table[i-1][1]);
+        }
+
+        return ans;
+    }
+};
