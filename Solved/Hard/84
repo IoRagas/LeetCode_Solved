@@ -1,0 +1,66 @@
+//Never ask a person, how his code runs.
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        stack<int> table;
+        int ans = 0; int n = heights.size();
+        if(n == 1) return heights[0];
+        vector<int> left(n, -1), right(n, -1);
+        table.push(0);
+        for(int i = 1; i < n; i++)
+        {
+           if( heights[i] > heights[table.top()])
+           {
+                left[i] = table.top();
+                table.push(i);
+           }else if(heights[i] <= heights[table.top()]){
+                while(!table.empty() && heights[i] <= heights[table.top()])
+                {
+                    table.pop();
+                }
+                if(!table.empty() && heights[i] >= heights[table.top()]) //Do nothing
+                {
+                    left[i] = table.top();
+                    table.push(i);
+                }else{
+                    if(table.empty() == true) left[i] = -1;
+                    table.push(i);
+                }
+           }
+        }
+        table = {}; table.push(n-1);
+        for(int i = n - 2; i >= 0; i--)
+        {
+           if(heights[i] > heights[table.top()])
+           {
+                right[i] = table.top();
+                table.push(i);
+           }else if(heights[i] <= heights[table.top()]){
+                while(!table.empty() && heights[i] <= heights[table.top()])
+                {
+                    table.pop();
+                }
+                if(!table.empty() && heights[i] >= heights[table.top()]) //Do nothing
+                {
+                    right[i] = table.top();
+                    table.push(i);
+                }else{
+                    if(table.empty() == true) right[i] = n;
+                     table.push(i);
+                }
+           }
+        }
+        for(int i = 0; i < n; i++)
+        {
+            ans = max(ans, heights[i]); // Single Box
+            int l = left[i], r = right[i];
+            int le = 0, ri = 0;
+            if(l != -1) le = (i - l - 1) * heights[i];
+            else le = (i * heights[i]);
+            if(r != -1) ri = (r - i - 1) * heights[i];
+            else ri = (n - i - 1) * heights[i];
+            ans = max(ans, le + ri + heights[i]);
+        }
+        return ans;
+    }
+};
